@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Locator
+namespace UnityServiceLocator
 {
     public interface IBuilder
     {
@@ -24,11 +24,37 @@ namespace Locator
             _register = register;
         }
 
+        public void RegisterDontDestroyOnLoad<T>(T mono) where T : MonoBehaviour
+        {
+            T newMono = Object.FindFirstObjectByType<T>();
+            if (newMono != null)
+            {
+                _register.Register<T>(newMono);
+                return;
+            }
+
+            newMono = Object.Instantiate<T>(mono);
+            _register.Register<T>(newMono);
+        }
+
+        public void RegisterDontDestroyOnLoad<T>() where T : MonoBehaviour
+        {
+            T newMono = Object.FindFirstObjectByType<T>();
+            if(newMono != null)
+            {
+                _register.Register<T>(newMono);
+                return;
+            }
+
+            newMono = new GameObject(typeof(T).Name).AddComponent<T>();
+            _register.Register<T>(newMono);
+        }
+
         public void RegisterResources<T>(string path) where T : Object
         {
             T loadMono = Resources.Load<T>(path);
             if (loadMono == null)
-                throw new ArgumentNullException($"Ошибка загрузки RegisterResources: путь {path}");
+                throw new ArgumentNullException($"Builder.RegisterResources: Ошибка загрузки путь - {path}");
 
             loadMono = Object.Instantiate<T>(loadMono);
             _register.Register<T>(loadMono);
@@ -47,7 +73,7 @@ namespace Locator
             if (newMono is I)
                 _register.Register<I>(newMono);
             else
-                Debug.LogError($"{typeof(T).Name} does not implement interface {typeof(I).Name}");
+                Debug.LogError($"Builder.RegisterCreate: {typeof(T).Name} does not implement interface {typeof(I).Name}");
         }
 
         public void RegisteNewGameobject<T>() where T : MonoBehaviour

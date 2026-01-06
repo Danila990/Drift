@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Locator
+namespace UnityServiceLocator
 {
     public interface IContainer : IContainerResolver, IContainerRegister
     {

@@ -1,0 +1,135 @@
+using UnityEngine;
+
+namespace Drift
+{
+    public class CarTurret : MonoBehaviour
+    {
+        [Header("Rotate")]
+        [SerializeField] private float _rotationSpeed = 100f;
+        [SerializeField] private float _maxVerticalAngle = 15f;
+        [SerializeField] private float _minVerticalAngle = -15f;
+        [SerializeField] private Transform _rotateModelX;
+        [SerializeField] private Transform _rotateModelY;
+
+        [Header("Detection")]
+        [SerializeField] private float _detectionRange = 15f;
+        [SerializeField] private LayerMask _enemyLayerMask;
+        [SerializeField] private LayerMask _obstacleLayerMask;
+
+        [Header("Fire")]
+        [SerializeField] private Transform _firePoint;
+        [SerializeField] private Bullet _bulletPrefab;
+        [SerializeField] private float _minFireAngle = 10;
+        [SerializeField] private float _fireRate = 1f;
+        [SerializeField] private float _bulletSpeed = 40f;
+        [SerializeField] private float _bulletLifetime = 5f;
+
+        private Transform _currentTarget;
+        private Timer _fireTimer;
+
+        private void Start()
+        {
+            _fireTimer = new Timer(_fireRate);
+        }
+
+        private void Update()
+        {
+            FindTarget();
+            RotateToTarget();
+            TryToShoot();
+        }
+
+        private void FindTarget()
+        {
+            Collider[] enemies = Physics.OverlapSphere(transform.position, _detectionRange, _enemyLayerMask);
+
+            Transform closestEnemy = null;
+            float closestDistance = Mathf.Infinity;
+
+            foreach (Collider enemy in enemies)
+            {
+                if (CheckRayObstacles(enemy.transform))
+                {
+                    float distance = Vector3.Distance(transform.position, enemy.transform.position);
+                    if (distance < closestDistance)
+                    {
+                        closestDistance = distance;
+                        closestEnemy = enemy.transform;
+                    }
+                }
+            }
+
+            _currentTarget = closestEnemy;
+        }
+
+        private bool CheckRayObstacles(Transform target)
+        {
+            RaycastHit hit;
+            Vector3 direction = target.position - _firePoint.position;
+
+            if (Physics.Raycast(_firePoint.position, direction.normalized, out hit, _detectionRange, _obstacleLayerMask))
+            {
+                if (hit.transform == target)
+                    return true;
+
+                return false;
+            }
+
+            return true;
+        }
+
+        private void RotateToTarget()
+        {
+            if(_currentTarget == null)
+            {
+                _rotateModelX.localRotation = Quaternion.RotateTowards(_rotateModelX.localRotation, Quaternion.identity, _rotationSpeed * Time.deltaTime);
+                _rotateModelY.localRotation = Quaternion.RotateTowards(_rotateModelY.localRotation, Quaternion.identity, _rotationSpeed * Time.deltaTime);
+                return;
+            }
+
+            Vector3 direction = _currentTarget.position - _rotateModelX.position;
+
+            Quaternion targetRotationY = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+            _rotateModelX.rotation = Quaternion.RotateTowards(_rotateModelX.rotation, targetRotationY, _rotationSpeed * Time.deltaTime);
+
+            float angleX = Mathf.Atan2(direction.y, new Vector3(direction.x, 0, direction.z).magnitude) * Mathf.Rad2Deg;
+            angleX = Mathf.Clamp(angleX, _minVerticalAngle, _maxVerticalAngle);
+
+            Quaternion targetRotationX = Quaternion.Euler(-angleX, 0, 0);
+            _rotateModelY.localRotation = Quaternion.RotateTowards(_rotateModelY.localRotation, targetRotationX, _rotationSpeed * Time.deltaTime);
+        }
+
+        private void TryToShoot()
+        {
+            if (_currentTarget != null && _fireTimer.IsTimerEnd)
+            {
+                Vector3 directionToTarget = _currentTarget.position - _firePoint.position;
+                float angle = Vector3.Angle(_firePoint.forward, directionToTarget);
+                if (angle < _minFireAngle)
+                {
+                    Shoot();
+                    _fireTimer.StartTime();
+                }
+            }
+        }
+
+        private void Shoot()
+        {
+            if (_bulletPrefab != null && _firePoint != null)
+            {
+                Bullet projectileController = Instantiate(_bulletPrefab, _firePoint.position, _firePoint.rotation);
+                projectileController.Initialize(_firePoint.forward * _bulletSpeed, _bulletLifetime);
+            }
+        }
+
+
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, _detectionRange);
+
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(_firePoint.position, _firePoint.position + _firePoint.forward * _detectionRange);
+        }
+    }
+}
