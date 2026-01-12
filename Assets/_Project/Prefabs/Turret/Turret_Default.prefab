@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2741034749699900590
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3472090656619507272}
+  m_Layer: 0
+  m_Name: FirePoint (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3472090656619507272
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2741034749699900590}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.806, y: 1.7390001, z: 2.389}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6176069411396133457}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4350887862356964509
 GameObject:
   m_ObjectHideFlags: 0
@@ -25,7 +56,7 @@ Transform:
   m_GameObject: {fileID: 4350887862356964509}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.7390001, z: 2.389}
+  m_LocalPosition: {x: -0.812, y: 1.7390001, z: 2.389}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -263,14 +294,16 @@ MonoBehaviour:
   _minVerticalAngle: -15
   _rotateModelX: {fileID: 7807126733497427527}
   _rotateModelY: {fileID: 6176069411396133457}
-  _detectionRange: 15
+  _detectionRange: 20
   _enemyLayerMask:
     serializedVersion: 2
     m_Bits: 64
   _obstacleLayerMask:
     serializedVersion: 2
     m_Bits: 128
-  _firePoint: {fileID: 3262006142791474728}
+  _firePoints:
+  - {fileID: 3262006142791474728}
+  - {fileID: 3472090656619507272}
   _bulletPrefab: {fileID: 3670975184207799832, guid: c80aa4bd5b7ac8f4bba929878e499b08, type: 3}
   _minFireAngle: 10
   _fireRate: 0.4
@@ -309,6 +342,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3262006142791474728}
+  - {fileID: 3472090656619507272}
   m_Father: {fileID: 7807126733497427527}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6173987245607937554

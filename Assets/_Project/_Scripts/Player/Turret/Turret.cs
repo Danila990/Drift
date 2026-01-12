@@ -17,7 +17,7 @@ namespace _Project
         [SerializeField] private LayerMask _obstacleLayerMask;
 
         [Header("Найстройки стрельбы")]
-        [SerializeField] private Transform _firePoint;
+        [SerializeField] private Transform[] _firePoints;
         [SerializeField] private Bullet _bulletPrefab;
         [SerializeField] private float _minFireAngle = 10;
         [SerializeField] private float _fireRate = 1f;
@@ -28,6 +28,7 @@ namespace _Project
 
         private Transform _currentTarget;
         private Timer _fireTimer;
+        private int _firePointIndex = 0;
 
         private void Awake()
         {
@@ -67,9 +68,9 @@ namespace _Project
         private bool CheckRayObstacles(Transform target)
         {
             RaycastHit hit;
-            Vector3 direction = target.position - _firePoint.position;
+            Vector3 direction = target.position - _rotateModelY.position;
 
-            if (Physics.Raycast(_firePoint.position, direction.normalized, out hit, _detectionRange, _obstacleLayerMask))
+            if (Physics.Raycast(_rotateModelY.position, direction.normalized, out hit, _detectionRange, _obstacleLayerMask))
             {
                 if (hit.transform == target)
                     return true;
@@ -105,8 +106,8 @@ namespace _Project
         {
             if (_currentTarget != null && _fireTimer.IsTimerEnd)
             {
-                Vector3 directionToTarget = _currentTarget.position - _firePoint.position;
-                float angle = Vector3.Angle(_firePoint.forward, directionToTarget);
+                Vector3 directionToTarget = _currentTarget.position - _rotateModelY.position;
+                float angle = Vector3.Angle(_rotateModelY.forward, directionToTarget);
                 if (angle < _minFireAngle)
                 {
                     Shoot();
@@ -117,21 +118,33 @@ namespace _Project
 
         private void Shoot()
         {
-            if (_bulletPrefab != null && _firePoint != null)
+            if (_bulletPrefab != null && _firePoints != null)
             {
-                Bullet projectileController = Instantiate(_bulletPrefab, _firePoint.position, _firePoint.rotation);
-                projectileController.Initialize(_firePoint.forward * _bulletSpeed, _bulletLifetime);
+                Transform firePoint = GetNextPoint();
+                Bullet projectileController = Instantiate(_bulletPrefab, firePoint.position, firePoint.rotation);
+                projectileController.Initialize(firePoint.forward * _bulletSpeed, _bulletLifetime);
             }
         }
 
+        private Transform GetNextPoint()
+        {
+            Transform point = null;
 
-        private void OnDrawGizmosSelected()
+            if (_firePoints.Length - 1 < _firePointIndex)
+                _firePointIndex = 0;
+
+            point = _firePoints[_firePointIndex];
+            _firePointIndex++;
+            return point;
+        }
+
+        private void OnDrawGizmos()
         {
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(transform.position, _detectionRange);
 
             Gizmos.color = Color.red;
-            Gizmos.DrawLine(_firePoint.position, _firePoint.position + _firePoint.forward * _detectionRange);
+            Gizmos.DrawLine(_rotateModelX.position, _rotateModelX.position + _rotateModelX.forward * _detectionRange);
         }
     }
 }
