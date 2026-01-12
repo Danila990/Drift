@@ -6,9 +6,11 @@ namespace UnityServiceLocator
 {
     public interface IBuilder
     {
+        public void RegisterDontDestroyOnLoad<T>(T mono) where T : MonoBehaviour;
+        public void RegisterDontDestroyOnLoad<T>() where T : MonoBehaviour;
         public void RegisterResources<T>(string path) where T : Object;
-        public void RegisterCreate<T>(T mono) where T : Object;
-        public void RegisterCreate<T, I>(T mono) where T : Object, I where I : class;
+        public void RegisterInstantiate<T>(T mono) where T : Object;
+        public void RegisterInstantiate<T, I>(T mono) where T : Object, I where I : class;
         public void RegisteNewGameobject<T>() where T : MonoBehaviour;
         public void RegisterNewGameobject<T, I>() where T : MonoBehaviour, I where I : class;
         public void RegisterNewClass<T>() where T : class, new();
@@ -34,6 +36,7 @@ namespace UnityServiceLocator
             }
 
             newMono = Object.Instantiate<T>(mono);
+            Object.DontDestroyOnLoad(newMono);
             _register.Register<T>(newMono);
         }
 
@@ -47,6 +50,7 @@ namespace UnityServiceLocator
             }
 
             newMono = new GameObject(typeof(T).Name).AddComponent<T>();
+            Object.DontDestroyOnLoad(newMono);
             _register.Register<T>(newMono);
         }
 
@@ -60,20 +64,20 @@ namespace UnityServiceLocator
             _register.Register<T>(loadMono);
         }
 
-        public void RegisterCreate<T>(T mono) where T : Object
+        public void RegisterInstantiate<T>(T mono) where T : Object
         {
             T newMono = Object.Instantiate<T>(mono);
             _register.Register<T>(newMono);
         }
 
-        public void RegisterCreate<T, I>(T mono) where T : Object, I where I : class
+        public void RegisterInstantiate<T, I>(T mono) where T : Object, I where I : class
         {
             T newMono = Object.Instantiate<T>(mono);
 
             if (newMono is I)
                 _register.Register<I>(newMono);
             else
-                Debug.LogError($"Builder.RegisterCreate: {typeof(T).Name} does not implement interface {typeof(I).Name}");
+                Debug.LogError($"Builder.RegisterInstantiate: {typeof(T).Name} неудалось зарегестрировать в виде {typeof(I).Name}");
         }
 
         public void RegisteNewGameobject<T>() where T : MonoBehaviour
@@ -89,7 +93,7 @@ namespace UnityServiceLocator
             if (newMono is I)
                 _register.Register<I>(newMono);
             else
-                Debug.LogError($"{typeof(T).Name} does not implement interface {typeof(I).Name}");
+                Debug.LogError($"{typeof(T).Name} неудалось зарегестрировать в виде {typeof(I).Name}");
         }
 
         public void RegisterNewClass<T>() where T: class, new()

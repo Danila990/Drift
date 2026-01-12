@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Drift
+namespace _Project
 {
     public class Bullet : MonoBehaviour
     {

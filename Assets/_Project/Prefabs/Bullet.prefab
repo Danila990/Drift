@@ -126,7 +126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9420875715ab4a74eac64fe785f23019, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Drift.ProjectileController
-  _damage: 10
+  _damage: 25
   _hitEffect: {fileID: 0}
 --- !u!54 &2139779732123192577
 Rigidbody:

@@ -1,22 +1,22 @@
 using UnityEngine;
 
-namespace Drift
+namespace _Project
 {
-    public class CarTurret : MonoBehaviour
+    public class Turret : MonoBehaviour
     {
-        [Header("Rotate")]
+        [Header("Настройки вращения")]
         [SerializeField] private float _rotationSpeed = 100f;
         [SerializeField] private float _maxVerticalAngle = 15f;
         [SerializeField] private float _minVerticalAngle = -15f;
         [SerializeField] private Transform _rotateModelX;
         [SerializeField] private Transform _rotateModelY;
 
-        [Header("Detection")]
+        [Header("Найстройки обнаружения")]
         [SerializeField] private float _detectionRange = 15f;
         [SerializeField] private LayerMask _enemyLayerMask;
         [SerializeField] private LayerMask _obstacleLayerMask;
 
-        [Header("Fire")]
+        [Header("Найстройки стрельбы")]
         [SerializeField] private Transform _firePoint;
         [SerializeField] private Bullet _bulletPrefab;
         [SerializeField] private float _minFireAngle = 10;
@@ -24,10 +24,12 @@ namespace Drift
         [SerializeField] private float _bulletSpeed = 40f;
         [SerializeField] private float _bulletLifetime = 5f;
 
+        [field: SerializeField, Header("Настройки турели")] public TurretType turretType { get; private set; }
+
         private Transform _currentTarget;
         private Timer _fireTimer;
 
-        private void Start()
+        private void Awake()
         {
             _fireTimer = new Timer(_fireRate);
         }

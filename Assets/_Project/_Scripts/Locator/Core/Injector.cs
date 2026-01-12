@@ -65,14 +65,14 @@ namespace UnityServiceLocator
             {
                 if (injectableField.GetValue(instance) != null)
                 {
-                    Debug.LogWarning($"[Injector] Field '{injectableField.Name}' of class '{type.Name}' is already set.");
+                    Debug.LogWarning($"Injector.InjectFields: поле '{injectableField.Name}' класса '{type.Name}' уже задано.");
                     continue;
                 }
 
                 var fieldType = injectableField.FieldType;
                 var resolvedInstance = _resolver.Resolve<object>(fieldType);
                 if (resolvedInstance == null)
-                    throw new Exception($"Failed to inject into field '{injectableField.Name}' of class '{type.Name}'.");
+                    throw new Exception($"Injector.InjectFields: ее удалось ввести данные в поле '{injectableField.Name}' класса '{type.Name}'.");
 
                 injectableField.SetValue(instance, resolvedInstance);
             }
@@ -90,7 +90,7 @@ namespace UnityServiceLocator
                     .ToArray();
                 var resolvedInstances = requiredParameters.Select(_resolver.Resolve<object>).ToArray();
                 if (resolvedInstances.Any(resolvedInstance => resolvedInstance == null))
-                    throw new Exception($"Failed to inject into method '{injectableMethod.Name}' of class '{type.Name}'.");
+                    throw new Exception($"Injector.InjectMethods: Ќе удалось внедрить в метод '{injectableMethod.Name}' класса '{type.Name}'.");
 
                 injectableMethod.Invoke(instance, resolvedInstances);
             }
@@ -106,7 +106,7 @@ namespace UnityServiceLocator
                 var propertyType = injectableProperty.PropertyType;
                 var resolvedInstance = _resolver.Resolve<object>(propertyType);
                 if (resolvedInstance == null)
-                    throw new Exception($"Failed to inject into property '{injectableProperty.Name}' of class '{type.Name}'.");
+                    throw new Exception($"Injector.InjectProperties: Ќе удалось внедрить в свойство '{injectableProperty.Name}' класса '{type.Name}'.");
 
                 injectableProperty.SetValue(instance, resolvedInstance);
             }

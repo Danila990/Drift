@@ -3,15 +3,15 @@ using UnityEngine;
 
 namespace UnityServiceLocator
 {
-    public abstract class ServiceScope : ServiceLocator
+    public class ServiceScope : ServiceLocator
     {
         [Header("Scope Settings")]
         [SerializeField] private bool _isAutoBuild = true;
         [SerializeField] private ServiceInstaller[] _installers;
 
         private bool _isBuilded = false;
-        private Injector _injector;
         private Builder _builder;
+        private static Injector _injector;
 
         protected override void Awake()
         {
@@ -73,7 +73,12 @@ namespace UnityServiceLocator
             }
         }
 
-        public abstract void Configurate(IBuilder builder);
+        public virtual void Configurate(IBuilder builder) { }
+
+        public static IInjector Inject(object obj) => _injector.Inject(obj);
+        public static IInjector InjectMono(object obj) => _injector.InjectMono(obj);
+        public static IInjector InjectMono(MonoBehaviour obj) => _injector.InjectMono(obj);
+
 
         protected override void OnDestroy()
         {

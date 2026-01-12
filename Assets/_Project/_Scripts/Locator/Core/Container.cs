@@ -39,7 +39,7 @@ namespace UnityServiceLocator
             if (_services.TryGetValue(type, out object obj))
                 return obj as T;
 
-            Debug.LogError($"Container resolve of type {type.FullName} - not registered");
+            Debug.LogError($"Container.Resolve: {type.FullName} не зарегистрирован");
             return null;
         }
 
@@ -57,7 +57,7 @@ namespace UnityServiceLocator
         public IContainerRegister Register<T>(T service, Type type) where T : class
         {
             if (!_services.TryAdd(type, service))
-                Debug.LogError($"Container register of type {type.FullName} - already registered");
+                Debug.LogError($"Container.Register:{type.FullName} уже зарегистрирован");
 
             return this;
         }

@@ -1,24 +1,20 @@
 using UnityEngine;
 
-namespace Drift
+namespace _Project
 {
-    public class CarMover : MonoBehaviour
+    public class CarEngine : MonoBehaviour
     {
+        [Header("Настройки предвижения")]
         [SerializeField] private float _moveSpeed = 100;
         [SerializeField] private float _maxMoveSpeed = 25;
         [SerializeField] private float _rotateAngle = 10;
         [SerializeField, Range(0, 1)] private float _drag = 0.98f;
         [SerializeField, Range(0, 1)] private float _tractionGround = 1;
+        [SerializeField] private Rigidbody _body;
 
         private float _inputX = 0;
         private float _inputY = 0;
 
-        private Rigidbody _body;
-
-        private void Start()
-        {
-            _body = GetComponent<Rigidbody>();
-        }
 
         private void Update()
         {
