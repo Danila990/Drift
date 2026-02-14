@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 631fd1d7c24918f43ad93449bd6d9b30, type: 3}
+  m_Name: PlayerFactory
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.PlayerFactory
+  _cars:
+  - {fileID: 8803830093356422273, guid: d4a33e0d0cfa62c44b119d18322dc0b4, type: 3}
+  _turret:
+  - {fileID: 8190550489315985752, guid: 17be2212660245d46bf238610444bba4, type: 3}
