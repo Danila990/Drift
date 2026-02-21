@@ -13,12 +13,18 @@ namespace _Project.UnityServiceLocator
         private static Injector _injector;
         private static Container _container;
 
+        protected ServiceResources _resources { get; private set; }
+        protected UserSettings _settings {  get; private set; }
+
         protected virtual void Awake()
         {
             if (!_isAutoBuild) return;
 
             Setup();
             SetupInstallers();
+            _resources = _builder.RegisterResources<ServiceResources>(nameof(ServiceResources));
+            _settings = _builder.RegisterResources<UserSettings>(nameof(UserSettings));
+            SetupSettings(_settings);
             Configurate(_builder);
             InjectContainer();
         }
@@ -43,6 +49,8 @@ namespace _Project.UnityServiceLocator
             foreach (var service in _container.Services)
                 _injector.InjectMono(service);
         }
+
+        public virtual void SetupSettings(UserSettings userSettings) { }
 
         public virtual void Configurate(IBuilder builder) { }
 

@@ -14,7 +14,7 @@ namespace _Project
 
         private void Start()
         {
-            _car = GameScope.Get<Car>();
+            _car = GameServiceLocator.Get<Car>();
             healthEnemy.OnDie += Death;
         }
 

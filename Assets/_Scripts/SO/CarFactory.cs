@@ -3,16 +3,16 @@ using UnityEngine;
 
 namespace _Project
 {
-    [CreateAssetMenu(fileName = "UserFactory", menuName = "MySo/UserFactory")]
-    public class UserFactory : ScriptableObject
+    [CreateAssetMenu(fileName = "CarFactory", menuName = "MySo/CarFactory")]
+    public class CarFactory : ScriptableObject
     {
         [SerializeField] private Car[] _cars;
         [SerializeField] private Turret[] _turret;
 
-        public Car CreateCar(PlayerConfig playerConfig)
+        public Car CreateCar(CarConfig carConfig)
         {
-            Car carPrefab = _cars.FirstOrDefault(_ => _.carType == playerConfig.CarType);
-            Turret turretPrefab = _turret.FirstOrDefault(_ => _.turretType == playerConfig.TurretType);
+            Car carPrefab = _cars.FirstOrDefault(_ => _.carType == carConfig.CarType);
+            Turret turretPrefab = _turret.FirstOrDefault(_ => _.turretType == carConfig.TurretType);
 
             carPrefab = Instantiate(carPrefab);
             turretPrefab = Instantiate(turretPrefab, carPrefab.turretPoint);

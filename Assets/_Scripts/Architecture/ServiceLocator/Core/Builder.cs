@@ -6,14 +6,14 @@ namespace _Project.UnityServiceLocator
 {
     public interface IBuilder
     {
-        public void RegisterDontDestroyOnLoad<T>(T mono) where T : MonoBehaviour;
-        public void RegisterDontDestroyOnLoad<T>() where T : MonoBehaviour;
-        public void RegisterResources<T>(string path) where T : Object;
-        public void RegisterInstantiate<T>(T mono) where T : Object;
-        public void RegisterInstantiate<T, I>(T mono) where T : Object, I where I : class;
-        public void RegisteNewGameobject<T>() where T : MonoBehaviour;
-        public void RegisterNewGameobject<T, I>() where T : MonoBehaviour, I where I : class;
-        public void RegisterNewClass<T>() where T : class, new();
+        public T RegisterDontDestroyOnLoad<T>(T mono) where T : MonoBehaviour;
+        public T RegisterDontDestroyOnLoad<T>() where T : MonoBehaviour;
+        public T RegisterResources<T>(string path) where T : Object;
+        public T RegisterInstantiate<T>(T mono) where T : Object;
+        public T RegisterInstantiate<T, I>(T mono) where T : Object, I where I : class;
+        public T RegisteNewGameobject<T>() where T : MonoBehaviour;
+        public T RegisterNewGameobject<T, I>() where T : MonoBehaviour, I where I : class;
+        public T RegisterNewClass<T>() where T : class, new();
         public void Register<T>(T registerClass) where T : class;
     }
 
@@ -26,41 +26,43 @@ namespace _Project.UnityServiceLocator
             _container = register;
         }
 
-        public void RegisterDontDestroyOnLoad<T>(T mono) where T : MonoBehaviour
+        public T RegisterDontDestroyOnLoad<T>(T mono) where T : MonoBehaviour
         {
-            if (!CheckAdd<T>()) return;
+            if (!CheckAdd<T>()) return null;
 
             T newMono = Object.FindFirstObjectByType<T>();
             if (newMono != null)
             {
                 _container.Register<T>(newMono);
-                return;
+                return newMono;
             }
 
             newMono = Object.Instantiate<T>(mono);
             Object.DontDestroyOnLoad(newMono);
             _container.Register<T>(newMono);
+            return newMono;
         }
 
-        public void RegisterDontDestroyOnLoad<T>() where T : MonoBehaviour
+        public T RegisterDontDestroyOnLoad<T>() where T : MonoBehaviour
         {
-            if (!CheckAdd<T>()) return;
+            if (!CheckAdd<T>()) return null;
 
             T newMono = Object.FindFirstObjectByType<T>();
             if(newMono != null)
             {
                 _container.Register<T>(newMono);
-                return;
+                return newMono;
             }
 
             newMono = new GameObject(typeof(T).Name).AddComponent<T>();
             Object.DontDestroyOnLoad(newMono);
             _container.Register<T>(newMono);
+            return newMono;
         }
 
-        public void RegisterResources<T>(string path) where T : Object
+        public T RegisterResources<T>(string path) where T : Object
         {
-            if (!CheckAdd<T>()) return;
+            if (!CheckAdd<T>()) return null;
 
             T loadMono = Resources.Load<T>(path);
             if (loadMono == null)
@@ -68,54 +70,71 @@ namespace _Project.UnityServiceLocator
 
             loadMono = Object.Instantiate<T>(loadMono);
             _container.Register<T>(loadMono);
+            return loadMono;
         }
 
-        public void RegisterInstantiate<T>(T mono) where T : Object
+        public T RegisterInstantiate<T>(T mono) where T : Object
         {
-            if (!CheckAdd<T>()) return;
+            if (!CheckAdd<T>()) return null;
 
             T newMono = Object.Instantiate<T>(mono);
             _container.Register<T>(newMono);
+            return newMono;
         }
 
-        public void RegisterInstantiate<T, I>(T mono) where T : Object, I where I : class
+        public T RegisterInstantiate<T, I>(T mono) where T : Object, I where I : class
         {
-            if (!CheckAdd<T>()) return;
+            if (!CheckAdd<T>()) return null;
 
             T newMono = Object.Instantiate<T>(mono);
 
             if (newMono is I)
+            {
                 _container.Register<I>(newMono);
+                return newMono;
+            }
             else
+            {
                 Debug.LogError($"Builder.RegisterInstantiate: {typeof(T).Name} неудалось зарегестрировать в виде {typeof(I).Name}");
+                return null;
+            }
         }
 
-        public void RegisteNewGameobject<T>() where T : MonoBehaviour
+        public T RegisteNewGameobject<T>() where T : MonoBehaviour
         {
-            if (!CheckAdd<T>()) return;
+            if (!CheckAdd<T>()) return null;
 
             T newMono = new GameObject(typeof(T).Name).AddComponent<T>();
             _container.Register<T>(newMono);
+
+            return newMono;
         }
 
-        public void RegisterNewGameobject<T,I>() where T : MonoBehaviour, I where I : class
+        public T RegisterNewGameobject<T,I>() where T : MonoBehaviour, I where I : class
         {
-            if (!CheckAdd<T>()) return;
+            if (!CheckAdd<T>()) return null;
 
             T newMono = new GameObject(typeof(T).Name).AddComponent<T>();
 
             if (newMono is I)
+            {
                 _container.Register<I>(newMono);
+                return newMono;
+            }
             else
+            {
                 Debug.LogError($"{typeof(T).Name} неудалось зарегестрировать в виде {typeof(I).Name}");
+                return null;
+            }
         }
 
-        public void RegisterNewClass<T>() where T: class, new()
+        public T RegisterNewClass<T>() where T: class, new()
         {
-            if (!CheckAdd<T>()) return;
+            if (!CheckAdd<T>()) return null;
 
             T newClass = new T();
             _container.Register<T>(newClass);
+            return newClass;
         }
 
         public void Register<T>(T register) where T : class

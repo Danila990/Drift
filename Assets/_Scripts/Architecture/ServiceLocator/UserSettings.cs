@@ -3,10 +3,10 @@ using UnityEngine;
 
 namespace _Project
 {
-    [Serializable]
-    public class UserSettings
+    [CreateAssetMenu(fileName = "UserSettings", menuName = "MySo/UserSettings")]
+    public class UserSettings : ScriptableObject
     {
-       [field: SerializeField] public PlayerConfig playerConfig { get; private set; }
+        [field: SerializeField] public CarConfig carConfig { get; private set; }
     }
 
     public enum TurretType
@@ -26,7 +26,7 @@ namespace _Project
     }
 
     [Serializable]
-    public class PlayerConfig
+    public class CarConfig
     {
         public CarType CarType;
         public TurretType TurretType;
