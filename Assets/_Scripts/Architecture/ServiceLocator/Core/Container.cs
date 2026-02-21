@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace _Project.Bootstrap
+namespace _Project.UnityServiceLocator
 {
     public interface IContainer : IContainerResolver, IContainerRegister
     {
+        public bool FindService<T>() where T : class;
     }
 
     public interface IContainerResolver
@@ -27,6 +28,11 @@ namespace _Project.Bootstrap
         private readonly Dictionary<Type, object> _services = new Dictionary<Type, object>();
 
         public IEnumerable<object> Services => _services.Values;
+
+        public bool FindService<T>() where T : class
+        {
+            return _services.ContainsKey(typeof(T));
+        }
 
         public IContainerResolver Resolve<T>(out T service) where T : class
         {

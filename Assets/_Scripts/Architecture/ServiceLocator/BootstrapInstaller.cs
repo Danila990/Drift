@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace _Project.Bootstrap
+namespace _Project.UnityServiceLocator
 {
     public abstract class BootstrapInstaller : MonoBehaviour
     {

@@ -1,37 +1,29 @@
 using System;
 using UnityEngine;
 
-namespace _Project.Bootstrap
+namespace _Project.UnityServiceLocator
 {
-    public class BootstrapScope : MonoBehaviour
+    public class ServiceLocator : MonoBehaviour
     {
-        [Header("Scope Settings")]
+        [Header("Service Settings")]
         [SerializeField] private bool _isAutoBuild = true;
         [SerializeField] private BootstrapInstaller[] _installers;
 
-        private bool _isBuilded = false;
         private Builder _builder;
         private static Injector _injector;
         private static Container _container;
 
         protected virtual void Awake()
         {
-            if (_isAutoBuild)
-                BuildScope();
-        }
+            if (!_isAutoBuild) return;
 
-        private void BuildScope()
-        {
-            if (_isBuilded) return;
-
-            _isBuilded = true;
-            InitScope();
-            Installers();
+            Setup();
+            SetupInstallers();
             Configurate(_builder);
             InjectContainer();
         }
 
-        private void Installers()
+        private void SetupInstallers()
         {
             if (_injector == null) return;
 
@@ -39,7 +31,7 @@ namespace _Project.Bootstrap
                 installer.Install(_builder);
         }
 
-        private void InitScope()
+        private void Setup()
         {
             _container = new Container();
             _builder = new Builder(_container);
@@ -50,8 +42,6 @@ namespace _Project.Bootstrap
         {
             foreach (var service in _container.Services)
                 _injector.InjectMono(service);
-
-            _injector.InjectAllScene();
         }
 
         public virtual void Configurate(IBuilder builder) { }

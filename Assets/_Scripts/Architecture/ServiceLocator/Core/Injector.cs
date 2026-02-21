@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
-namespace _Project.Bootstrap
+namespace _Project.UnityServiceLocator
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Method | AttributeTargets.Property)]
     public sealed class InjectAttribute : PropertyAttribute { }
@@ -24,15 +24,6 @@ namespace _Project.Bootstrap
         public Injector(IContainerResolver resolver)
         {
             _resolver = resolver;
-        }
-
-        public void InjectAllScene()
-        {
-            MonoBehaviour[] findMonos = UnityEngine.Object.FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.InstanceID);
-            if (findMonos == null) return;
-
-            foreach (var monos in findMonos)
-                InjectMono(monos);
         }
 
         public IInjector InjectMono(object obj)

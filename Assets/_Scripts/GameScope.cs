@@ -1,9 +1,9 @@
-using _Project.Bootstrap;
+using _Project.UnityServiceLocator;
 using UnityEngine;
 
 namespace _Project
 {
-    public class GameScope : BootstrapScope
+    public class GameScope : ServiceLocator
     {
         [Space(5), Header("Game Scope Settings")]
         [SerializeField] private UserSettings _settings;
