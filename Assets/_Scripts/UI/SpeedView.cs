@@ -9,7 +9,7 @@ namespace _Project
     {
         [SerializeField] private Text _speedText;
 
-        [Inject] private CarEngine _car;
+        [Inject] private CarMovement _car;
 
 
         private void Start()

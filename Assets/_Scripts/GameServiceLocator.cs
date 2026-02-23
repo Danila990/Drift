@@ -26,7 +26,7 @@ namespace _Project
 
             Car car = carFactory.CreateCar(carConfig);
             builder.Register(car);
-            builder.Register(car.GetComponent<CarEngine>());
+            builder.Register(car.GetComponent<CarMovement>());
         }
     }
 }

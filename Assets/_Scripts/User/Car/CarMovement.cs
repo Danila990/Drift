@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace _Project
 {
-    public class CarEngine : MonoBehaviour
+    public class CarMovement : MonoBehaviour
     {
         [Header("Настройки Передвижение")]
         [SerializeField] private float _moveSpeed = 50;
